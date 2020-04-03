@@ -5,9 +5,9 @@ import OTPScreen from './ui/screens/OTPScreen';
 
 const Router = createStackNavigator(
   {
-    PhoneNumberScreen: {
-      screen: PhoneNumberScreen,
-    },
+    // PhoneNumberScreen: {
+    //   screen: PhoneNumberScreen,
+    // },
     OTPScreen: {
       screen: OTPScreen,
     },

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Button, TextInput, Text, StyleSheet} from 'react-native';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const OTPScreen = ({navigation}) => {
   return (
@@ -12,7 +13,13 @@ const OTPScreen = ({navigation}) => {
           {navigation.getParam('phoneNumber')}
         </Text>
       </View>
-      <View style={styles.OTPArea}></View>
+      <View style={styles.otpArea}>
+        <OTPInputView
+          codeInputFieldStyle={styles.otpFeildArea}
+          style={{width: '100%', height: 100, paddingHorizontal: 20}}
+          pinCount={4}
+        />
+      </View>
     </View>
   );
 };
@@ -30,10 +37,15 @@ const styles = StyleSheet.create({
   headerText: {
     marginHorizontal: 20,
   },
-  OTPArea: {
+  otpArea: {
     flex: 1,
     flexDirection: 'row',
     marginVertical: 20,
+  },
+  otpFeildArea: {
+    color: 'black',
+    borderColor: 'black',
+    height: 45,
   },
   textStyle: {
     fontSize: 26,
