@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
+import auth from '@react-native-firebase/auth';
+
 const PhoneNumberScreen = (props) => {
   const [number, setNumber] = useState<string>('');
 
   const [shouldShowButton, setShouldShowButton] = useState(false);
 
-  const buttonHandler = () => {
+  const buttonHandler = async () => {
+    const confirmation = await auth().signInWithPhoneNumber(`+91 ${number}`);
+    console.log(' ====== confiramtion ', confirmation.verificationId);
     props.navigation.navigate('OTPScreen', {
       phoneNumber: number,
     });

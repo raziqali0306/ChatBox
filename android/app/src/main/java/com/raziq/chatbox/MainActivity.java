@@ -1,4 +1,4 @@
-package com.chatbox;
+package com.raziq.chatbox;
 
 import com.facebook.react.ReactActivity;
 
