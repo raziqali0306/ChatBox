@@ -9,9 +9,9 @@ const PhoneNumberScreen = (props) => {
 
   const buttonHandler = async () => {
     const confirmation = await auth().signInWithPhoneNumber(`+91 ${number}`);
-    console.log(' ====== confiramtion ', confirmation.verificationId);
     props.navigation.navigate('OTPScreen', {
       phoneNumber: number,
+      confirmation: confirmation,
     });
   };
 
@@ -40,7 +40,6 @@ const PhoneNumberScreen = (props) => {
               }
             }}
           />
-          {console.log(number)}
         </View>
       </View>
       {shouldShowButton ? (

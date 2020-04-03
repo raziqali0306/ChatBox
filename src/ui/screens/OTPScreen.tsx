@@ -1,8 +1,34 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Button, TextInput, Text, StyleSheet} from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 
 const OTPScreen = ({navigation}) => {
+  const confirmation: FirebaseAuthTypes.ConfirmationResult = navigation.getParam(
+    'confirmation',
+  );
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('user.uid');
+        console.log(user.uid);
+        console.log('user.uid');
+        console.log('user.phoneNumber');
+        console.log(user.phoneNumber);
+        console.log('user.phoneNumber');
+        console.log('user.displayName');
+        console.log(user.displayName);
+        console.log('user.displayName');
+      }
+    });
+  }, []);
+
+  const login = async (code: string) => {
+    await confirmation.confirm(code);
+  };
+
   return (
     <View style={styles.mainViewStyle}>
       <View style={styles.backbutton}>{/* backbutton */}</View>
@@ -16,8 +42,11 @@ const OTPScreen = ({navigation}) => {
       <View style={styles.otpArea}>
         <OTPInputView
           codeInputFieldStyle={styles.otpFeildArea}
-          style={{width: '100%', height: 100, paddingHorizontal: 20}}
-          pinCount={4}
+          style={{width: '100%', height: 100}}
+          pinCount={6}
+          onCodeFilled={(code) => {
+            login(code);
+          }}
         />
       </View>
     </View>
