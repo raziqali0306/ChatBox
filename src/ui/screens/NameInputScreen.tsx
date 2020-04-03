@@ -1,50 +1,35 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
-import auth, {firebase} from '@react-native-firebase/auth';
-
-const PhoneNumberScreen = (props) => {
-  useEffect(() => {
-    try {
-      if (firebase.auth().currentUser) {
-        firebase.auth().signOut();
-      }
-    } catch (_) {}
-  }, []);
-
-  const [number, setNumber] = useState<string>('');
+const NameInputScreen = (props) => {
+  const [userName, setUserName] = useState<string>('');
 
   const [shouldShowButton, setShouldShowButton] = useState(false);
 
-  const buttonHandler = async () => {
-    const confirmation = await auth().signInWithPhoneNumber(`+91 ${number}`);
-    props.navigation.navigate('OTPScreen', {
-      phoneNumber: number,
-      confirmation: confirmation,
-    });
+  const buttonHandler = () => {
+    console.log('====process complete');
+    // props.navigation.navigate('OTPScreen');
   };
 
   return (
     <View style={styles.mainViewStyle}>
       <View style={styles.containerStyle}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>
-            Enter your mobile number to get started
-          </Text>
+          <Text style={styles.titleText}>Enter your Name</Text>
         </View>
         <View style={styles.input}>
           <TextInput
             style={styles.textInput}
-            value={number}
-            keyboardType={'number-pad'}
-            placeholder={'Enter Phone number'}
-            onChangeText={(number) => {
-              if (number.length <= 10) {
-                if (number.length === 10) {
+            value={userName}
+            keyboardType={'name-phone-pad'}
+            placeholder={'Enter your Name'}
+            onChangeText={(text) => {
+              if (text.length <= 16) {
+                if (text.length > 5) {
                   setShouldShowButton(true);
                 } else {
                   setShouldShowButton(false);
                 }
-                setNumber(number);
+                setUserName(text);
               }
             }}
           />
@@ -99,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhoneNumberScreen;
+export default NameInputScreen;
