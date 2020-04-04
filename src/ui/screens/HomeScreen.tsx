@@ -11,6 +11,7 @@ const HomeScreen = (props) => {
       return;
     }
     const response = await api.searchUsers(searchText);
+
     if (response) {
       setUserList(response);
     }
