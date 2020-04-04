@@ -10,9 +10,15 @@
 
 import React from 'react';
 import Navigator from './src//Router';
+import {StoreProvider} from 'easy-peasy';
+import store from './src/stores';
 
 const App = () => {
-  return <Navigator />;
+  return (
+    <StoreProvider store={store}>
+      <Navigator />
+    </StoreProvider>
+  );
 };
 
 export default App;

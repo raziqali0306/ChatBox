@@ -1,17 +1,60 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import {User} from './../../common/Api';
+import {useStoreState} from './../../stores';
+import {Message} from 'src/models';
 
-const ChatScreen = () => {
+const ChatScreen = (props: any) => {
+  const user = useStoreState((state) => state.loginStore.currentLoggedInUser);
   const [searchText, setSearchText] = useState('');
 
+  const [messages, setMessages] = useState<Array<Message>>([
+    {
+      messageId: 'somemessge-one',
+      senderId: 'senderId',
+      recieverId: 'recieverId',
+      text: '',
+      timestamp: '',
+      seen: false,
+    },
+    {
+      messageId: 'somemessge-one',
+      senderId: 'recieverId',
+      recieverId: 'senderId',
+      text: '',
+      timestamp: '',
+      seen: false,
+    },
+    {
+      messageId: 'somemessge-one',
+      senderId: 'senderId',
+      recieverId: 'recieverId',
+      text: '',
+      timestamp: '',
+      seen: false,
+    },
+    {
+      messageId: 'somemessge-one',
+      senderId: 'recieverId',
+      recieverId: 'senderId',
+      text: '',
+      timestamp: '',
+      seen: false,
+    },
+  ]);
+  const contact: User = props.navigation.getParam('contact');
+
   const pressHandler = () => {};
+  if (!contact) {
+    return null;
+  }
   return (
     <View style={styles.mainViewStyle}>
       <View style={styles.item}>
         <View style={styles.profileBox} />
         <View style={styles.userInfo}>
-          <Text style={{fontSize: 14}}>Name</Text>
-          <Text style={{fontSize: 10}}>phoneNunmber</Text>
+          <Text style={{fontSize: 14}}>{contact.name}</Text>
+          <Text style={{fontSize: 10}}>{contact.phoneNumber}</Text>
         </View>
       </View>
       <View style={{flex: 1}} />

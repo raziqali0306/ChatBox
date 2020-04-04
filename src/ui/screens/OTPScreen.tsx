@@ -4,8 +4,10 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
 import Api from './../../common/Api';
+import {useStoreActions} from './../../stores';
 
 const OTPScreen = ({navigation}) => {
+  const loginUser = useStoreActions((state) => state.loginStore.loginUser);
   const confirmation: FirebaseAuthTypes.ConfirmationResult = navigation.getParam(
     'confirmation',
   );
@@ -15,7 +17,13 @@ const OTPScreen = ({navigation}) => {
       if (user) {
         const userExists = await Api.userExists(user.uid);
         if (userExists) {
-          navigation.navigate('HomeScreen');
+          const userInfo = await Api.getUserInfo(user.uid);
+          if (userInfo) {
+            loginUser(userInfo);
+            navigation.navigate('HomeScreen');
+          } else {
+            // todo
+          }
         } else {
           navigation.navigate('NameInputScreen', {
             user: user,
