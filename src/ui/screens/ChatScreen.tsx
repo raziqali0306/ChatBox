@@ -67,15 +67,23 @@ const ChatScreen = (props: any) => {
             return (
               <View
                 style={
-                  'senderId' === item.senderId
-                    ? styles.sendersView
-                    : styles.receiversView
+                  item.senderId === 'senderId'
+                    ? // eslint-disable-next-line react-native/no-inline-styles
+                      {...styles.messageView, justifyContent: 'flex-end'}
+                    : // eslint-disable-next-line react-native/no-inline-styles
+                      {...styles.messageView, justifyContent: 'flex-start'}
                 }>
                 <Text
                   style={
-                    'senderId' === item.senderId
-                      ? styles.sendersText
-                      : styles.receiversText
+                    item.senderId === 'senderId'
+                      ? // eslint-disable-next-line react-native/no-inline-styles
+                        {
+                          ...styles.messageStyle,
+                          backgroundColor: '#1E90FF',
+                          color: 'white',
+                        }
+                      : // eslint-disable-next-line react-native/no-inline-styles
+                        {...styles.messageStyle, backgroundColor: '#B0C4DE'}
                   }>
                   {item.text}
                 </Text>
@@ -145,28 +153,12 @@ const styles = StyleSheet.create({
   userInfo: {
     flex: 1,
   },
-  sendersView: {
+  messageView: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     margin: 5,
   },
-  receiversView: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    margin: 5,
-  },
-  sendersText: {
+  messageStyle: {
     maxWidth: '70%',
-    backgroundColor: '#1E90FF',
-    color: 'white',
-    padding: 6,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    elevation: 2,
-  },
-  receiversText: {
-    maxWidth: '70%',
-    backgroundColor: '#B0C4DE',
     padding: 6,
     paddingHorizontal: 10,
     borderRadius: 10,
