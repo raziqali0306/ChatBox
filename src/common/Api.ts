@@ -8,12 +8,25 @@ export interface User {
 class Api {
   baseUrl: string = 'http://192.168.0.110:3000';
 
+  async getUserInfo(userId: string): Promise<User | null> {
+    try {
+      const user = await get(`${this.baseUrl}/users/${userId}`)
+      if (user) {
+        return user
+      } else {
+        return null
+      }
+    } catch (err) {
+      return null
+    }
+  }
+
   async userExists(userId: string): Promise<boolean> {
     try {
-      const userExists: boolean = await get(
+      const response: {userExists: boolean} = await get(
         `${this.baseUrl}/user_exists/${userId}`,
       );
-      return userExists;
+      return response.userExists;
     } catch (error) {
       return false;
     }

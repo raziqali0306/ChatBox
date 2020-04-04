@@ -1,23 +1,27 @@
 import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import api from './../../common/Api';
+import api, {User} from './../../common/Api';
+import {useStoreActions} from './../../stores';
 
 const NameInputScreen = (props: any) => {
   const [userName, setUserName] = useState<string>('');
 
+  const loginUser = useStoreActions((state) => state.loginStore.loginUser);
   const [shouldShowButton, setShouldShowButton] = useState(false);
   const firebaseUser: FirebaseAuthTypes.User = props.navigation.getParam(
     'user',
   );
   const buttonHandler = async () => {
-    const isUserSignedIn = await api.signUpUser({
+    const user: User = {
       id: firebaseUser.uid,
       name: userName,
       phoneNumber: firebaseUser.phoneNumber ? firebaseUser.phoneNumber : '',
       email: '',
-    });
+    };
+    const isUserSignedIn = await api.signUpUser(user);
     if (isUserSignedIn) {
+      loginUser(user);
       props.navigation.navigate('HomeScreen');
     } else {
       // todo

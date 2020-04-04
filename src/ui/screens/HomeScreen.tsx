@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
+import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native';
 import {TextInput, FlatList} from 'react-native-gesture-handler';
 import api, {User} from './../../common/Api';
 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
   const [searchText, setSearchText] = useState('');
   const [usersList, setUserList] = useState<Array<User>>([]);
   const pressHandler = async () => {
@@ -33,13 +33,19 @@ const HomeScreen = () => {
           data={usersList}
           renderItem={({item}) => {
             return (
-              <View style={styles.item}>
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => {
+                  props.navigation.navigate('ChatScreen', {
+                    contact: item,
+                  });
+                }}>
                 <View style={styles.profileBox} />
                 <View style={styles.userInfo}>
                   <Text style={{fontSize: 18}}>{item.name}</Text>
                   <Text style={{fontSize: 12}}>{item.phoneNumber}</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => {
