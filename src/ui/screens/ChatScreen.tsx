@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
 import api, {User} from './../../common/Api';
 import {useStoreState} from './../../stores';
@@ -9,41 +11,28 @@ const ChatScreen = (props: any) => {
   const user = useStoreState((state) => state.loginStore.currentLoggedInUser);
   const [messageText, setMessageText] = useState('');
 
-  const [messages, setMessages] = useState<Array<Message>>([
-    {
-      messageId: 'somemessge-one',
-      senderId: 'senderId',
-      recieverId: 'recieverId',
-      text: 'hey! how are you',
-      timestamp: '',
-      seen: false,
-    },
-    {
-      messageId: 'somemessge-two',
-      senderId: 'recieverId',
-      recieverId: 'senderId',
-      text: 'message two',
-      timestamp: '',
-      seen: false,
-    },
-    {
-      messageId: 'somemessge-three',
-      senderId: 'senderId',
-      recieverId: 'recieverId',
-      text:
-        'ooasdfasdfa adf asd fa sd fa sd fa sdf a sd fa sd f adfafa df asdfadfa ds f fasdf',
-      timestamp: '',
-      seen: false,
-    },
-    {
-      messageId: 'somemessge-four',
-      senderId: 'recieverId',
-      recieverId: 'senderId',
-      text: 'asdfasdfa sdf a sd fa sd f as df as d fa sd fa sdf ',
-      timestamp: '',
-      seen: false,
-    },
-  ]);
+  const [messages, setMessages] = useState<Array<Message>>([]);
+
+  const getMessages = async () => {
+    if (user) {
+      const arrayOfMessages = await api.getAllMessagesOfChat(
+        user?.id,
+        contact.id,
+      );
+      setMessages(arrayOfMessages);
+    }
+  };
+  useEffect(() => {
+    getMessages();
+    setInterval(() => {
+      api.getMessageCountOfChat(user!.id, contact.id).then((count) => {
+        if (count > messages.length) {
+          getMessages();
+        }
+      });
+    }, 2000);
+  }, []);
+
   const contact: User = props.navigation.getParam('contact');
 
   const pressHandler = () => {
@@ -66,7 +55,7 @@ const ChatScreen = (props: any) => {
       <View style={styles.item}>
         <View style={styles.profileBox} />
         <View style={styles.userInfo}>
-          <Text style={{fontSize: 14}}>{contact.name}}</Text>
+          <Text style={{fontSize: 14}}>{contact.name}</Text>
           <Text style={{fontSize: 10}}>{contact.phoneNumber}</Text>
         </View>
       </View>
@@ -77,23 +66,19 @@ const ChatScreen = (props: any) => {
             return (
               <View
                 style={
-                  item.senderId === 'senderId'
-                    ? // eslint-disable-next-line react-native/no-inline-styles
-                      {...styles.messageView, justifyContent: 'flex-end'}
-                    : // eslint-disable-next-line react-native/no-inline-styles
-                      {...styles.messageView, justifyContent: 'flex-start'}
+                  item.senderId === user?.id
+                    ? {...styles.messageView, justifyContent: 'flex-end'}
+                    : {...styles.messageView, justifyContent: 'flex-start'}
                 }>
                 <Text
                   style={
-                    item.senderId === 'senderId'
-                      ? // eslint-disable-next-line react-native/no-inline-styles
-                        {
+                    item.senderId === user?.id
+                      ? {
                           ...styles.messageStyle,
                           backgroundColor: '#1E90FF',
                           color: 'white',
                         }
-                      : // eslint-disable-next-line react-native/no-inline-styles
-                        {...styles.messageStyle, backgroundColor: '#B0C4DE'}
+                      : {...styles.messageStyle, backgroundColor: '#B0C4DE'}
                   }>
                   {item.text}
                 </Text>

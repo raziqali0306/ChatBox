@@ -1,6 +1,5 @@
-
-import { v4 as uuid } from 'uuid'
-import { Message } from 'src/models';
+import {v4 as uuid} from 'uuid';
+import {Message} from 'src/models';
 export interface User {
   id: string;
   name: string;
@@ -8,26 +7,25 @@ export interface User {
   email: string;
 }
 
-
 interface SendMessageBody {
-	id: string,
-	userId: string,
-	friendId: string,
-	message: string
+  id: string;
+  userId: string;
+  friendId: string;
+  message: string;
 }
 class Api {
   baseUrl: string = 'http://192.168.0.110:3000';
 
   async getUserInfo(userId: string): Promise<User | null> {
     try {
-      const user = await get(`${this.baseUrl}/users/${userId}`)
+      const user = await get(`${this.baseUrl}/users/${userId}`);
       if (user) {
-        return user
+        return user;
       } else {
-        return null
+        return null;
       }
     } catch (err) {
-      return null
+      return null;
     }
   }
 
@@ -64,16 +62,19 @@ class Api {
     }
   }
 
-
-  async sendMessage(userId: string, toUserId: string, message: string): Promise<Message | null> {
+  async sendMessage(
+    userId: string,
+    toUserId: string,
+    message: string,
+  ): Promise<Message | null> {
     try {
-      const messageId = uuid()
+      const messageId = uuid();
       const body: SendMessageBody = {
         id: messageId,
         userId: userId,
         friendId: toUserId,
         message: message,
-      }
+      };
       const response = await post(`${this.baseUrl}/send_message`, body);
       if (response) {
         return {
@@ -81,13 +82,39 @@ class Api {
           senderId: userId,
           recieverId: toUserId,
           text: message,
-          timestamp: ''
-        } as Message
+          timestamp: '',
+        } as Message;
       } else {
-        return null
+        return null;
       }
     } catch (error) {
-      return null
+      return null;
+    }
+  }
+  async getAllMessagesOfChat(
+    uid: string,
+    friendUId: string,
+  ): Promise<Array<Message>> {
+    try {
+      const arrayOfMessages = await post(`${this.baseUrl}/messages`, {
+        friendId: friendUId,
+        userId: uid,
+      });
+      return arrayOfMessages;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getMessageCountOfChat(uid: string, friendUId: string): Promise<number> {
+    try {
+      const response = await post(`${this.baseUrl}/messages_count`, {
+        friendId: friendUId,
+        userId: uid,
+      });
+      return response.messages_count;
+    } catch (error) {
+      return 0;
     }
   }
 }
@@ -107,7 +134,7 @@ const post = (url: string, body: object): Promise<any> => {
       body: JSON.stringify(body),
     })
       .then((response) => {
-        resolve(response);
+        resolve(response.json());
       })
       .catch((error) => {
         reject(error);
