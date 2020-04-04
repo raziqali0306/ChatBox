@@ -1,6 +1,4 @@
-
-
-interface User {
+export interface User {
   id: string;
   name: string;
   phoneNumber: string;
@@ -8,33 +6,43 @@ interface User {
 }
 
 class Api {
-  baseUrl: string = "http://192.168.0.110:3000"
+  baseUrl: string = 'http://192.168.0.110:3000';
 
   async userExists(userId: string): Promise<boolean> {
     try {
-      const userExists: boolean = await get(`${this.baseUrl}/user_exists/${userId}`)
-      return userExists
-    } catch(error) {
-      return false
+      const userExists: boolean = await get(
+        `${this.baseUrl}/user_exists/${userId}`,
+      );
+      return userExists;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async searchUsers(text: string): Promise<Array<User>> {
+    try {
+      const searchResult = await get(`${this.baseUrl}/users/search/${text}`);
+      return searchResult;
+    } catch (error) {
+      return [];
     }
   }
 
   async signUpUser(body: User): Promise<boolean> {
     try {
-      const response = await post(`${this.baseUrl}/sign_up`, body)
+      const response = await post(`${this.baseUrl}/sign_up`, body);
       if (response) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
-    } catch(error) {
-      return false
+    } catch (error) {
+      return false;
     }
   }
-
 }
 
-const api = new Api()
+const api = new Api();
 
 export default api;
 
@@ -47,13 +55,15 @@ const post = (url: string, body: object): Promise<any> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    }).then(response => {
-      resolve(response)
-    }).catch(error => {
-      reject(error)
     })
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
-}
+};
 
 const get = (url: string): Promise<any> => {
   return new Promise((resolve, reject) => {
