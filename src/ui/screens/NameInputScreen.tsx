@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import api from './../../common/Api';
 
 const NameInputScreen = (props: any) => {
   const [userName, setUserName] = useState<string>('');
@@ -9,21 +10,18 @@ const NameInputScreen = (props: any) => {
   const firebaseUser: FirebaseAuthTypes.User = props.navigation.getParam(
     'user',
   );
-  const buttonHandler = () => {
-    fetch('http://192.168.0.110:3000/sign_up', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: firebaseUser.uid,
-        name: userName,
-        phoneNumber: firebaseUser.phoneNumber,
-        email: '',
-      }),
+  const buttonHandler = async () => {
+    const isUserSignedIn = await api.signUpUser({
+      id: firebaseUser.uid,
+      name: userName,
+      phoneNumber: firebaseUser.phoneNumber ? firebaseUser.phoneNumber : '',
+      email: '',
     });
-    props.navigation.navigate('HomeScreen');
+    if (isUserSignedIn) {
+      props.navigation.navigate('HomeScreen');
+    } else {
+      // todo
+    }
   };
 
   return (

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
-import {get} from './../../common/Api';
+import Api from './../../common/Api';
 
 const OTPScreen = ({navigation}) => {
   const confirmation: FirebaseAuthTypes.ConfirmationResult = navigation.getParam(
@@ -13,19 +13,13 @@ const OTPScreen = ({navigation}) => {
   const listenAuthStateChange = () => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user);
-        const url = `http://192.168.0.110:3000/user_exists/${user.uid}`;
-        try {
-          const response = await get(url);
-          if (!response.userExists) {
-            navigation.navigate('NameInputScreen', {
-              user: user,
-            });
-          } else {
-            navigation.navigate('HomeScreen');
-          }
-        } catch (error) {
-          console.log(error);
+        const userExists = await Api.userExists(user.uid);
+        if (userExists) {
+          navigation.navigate('HomeScreen');
+        } else {
+          navigation.navigate('NameInputScreen', {
+            user: user,
+          });
         }
       }
     });
