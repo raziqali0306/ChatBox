@@ -1,50 +1,51 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
-import auth, {firebase} from '@react-native-firebase/auth';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
-const PhoneNumberScreen = (props) => {
-  useEffect(() => {
-    try {
-      if (firebase.auth().currentUser) {
-        firebase.auth().signOut();
-      }
-    } catch (_) {}
-  }, []);
-
-  const [number, setNumber] = useState<string>('');
+const NameInputScreen = (props: any) => {
+  const [userName, setUserName] = useState<string>('');
 
   const [shouldShowButton, setShouldShowButton] = useState(false);
-
-  const buttonHandler = async () => {
-    const confirmation = await auth().signInWithPhoneNumber(`+91 ${number}`);
-    props.navigation.navigate('OTPScreen', {
-      phoneNumber: number,
-      confirmation: confirmation,
+  const firebaseUser: FirebaseAuthTypes.User = props.navigation.getParam(
+    'user',
+  );
+  const buttonHandler = () => {
+    fetch('http://192.168.0.110:3000/sign_up', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: firebaseUser.uid,
+        name: userName,
+        phoneNumber: firebaseUser.phoneNumber,
+        email: '',
+      }),
     });
+    props.navigation.navigate('HomeScreen');
   };
 
   return (
     <View style={styles.mainViewStyle}>
       <View style={styles.containerStyle}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>
-            Enter your mobile number to get started
-          </Text>
+          <Text style={styles.titleText}>Enter your Name</Text>
         </View>
         <View style={styles.input}>
           <TextInput
             style={styles.textInput}
-            value={number}
-            keyboardType={'number-pad'}
-            placeholder={'Enter Phone number'}
-            onChangeText={(number) => {
-              if (number.length <= 10) {
-                if (number.length === 10) {
+            value={userName}
+            keyboardType={'name-phone-pad'}
+            placeholder={'Enter your Name'}
+            onChangeText={(text) => {
+              if (text.length <= 16) {
+                if (text.length > 5) {
                   setShouldShowButton(true);
                 } else {
                   setShouldShowButton(false);
                 }
-                setNumber(number);
+                setUserName(text);
               }
             }}
           />
@@ -99,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhoneNumberScreen;
+export default NameInputScreen;

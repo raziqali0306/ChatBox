@@ -1,28 +1,38 @@
 import React, {useEffect} from 'react';
-import {View, Button, TextInput, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
+import {get} from './../../common/Api';
 
 const OTPScreen = ({navigation}) => {
   const confirmation: FirebaseAuthTypes.ConfirmationResult = navigation.getParam(
     'confirmation',
   );
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+  const listenAuthStateChange = () => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log('user.uid');
-        console.log(user.uid);
-        console.log('user.uid');
-        console.log('user.phoneNumber');
-        console.log(user.phoneNumber);
-        console.log('user.phoneNumber');
-        console.log('user.displayName');
-        console.log(user.displayName);
-        console.log('user.displayName');
+        console.log(user);
+        const url = `http://192.168.0.110:3000/user_exists/${user.uid}`;
+        try {
+          const response = await get(url);
+          if (!response.userExists) {
+            navigation.navigate('NameInputScreen', {
+              user: user,
+            });
+          } else {
+            navigation.navigate('HomeScreen');
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
+  };
+
+  useEffect(() => {
+    listenAuthStateChange();
   }, []);
 
   const login = async (code: string) => {
