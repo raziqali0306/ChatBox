@@ -4,6 +4,7 @@ import PhoneNumberScreen from './ui/screens/PhoneNumberScreen';
 import OTPScreen from './ui/screens/OTPScreen';
 import NameInputScreen from './ui/screens/NameInputScreen';
 import HomeScreen from './ui/screens/HomeScreen';
+import ChatScreen from './ui/screens/ChatScreen';
 
 const Router = createStackNavigator(
   {
@@ -18,6 +19,9 @@ const Router = createStackNavigator(
     },
     HomeScreen: {
       screen: HomeScreen,
+    },
+    ChatScreen: {
+      screen: ChatScreen,
     },
   },
   {headerMode: 'none'},
