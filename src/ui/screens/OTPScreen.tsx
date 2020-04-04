@@ -14,13 +14,15 @@ const OTPScreen = ({navigation}) => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         console.log(user);
-        const url = `http://192.168.0.110:3000/users/${user.uid}`;
+        const url = `http://192.168.0.110:3000/user_exists/${user.uid}`;
         try {
           const response = await get(url);
           if (!response.userExists) {
             navigation.navigate('NameInputScreen', {
               user: user,
             });
+          } else {
+            navigation.navigate('HomeScreen');
           }
         } catch (error) {
           console.log(error);

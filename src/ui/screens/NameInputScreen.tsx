@@ -1,13 +1,29 @@
 import React, {useState} from 'react';
 import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
-const NameInputScreen = (props) => {
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+
+const NameInputScreen = (props: any) => {
   const [userName, setUserName] = useState<string>('');
 
   const [shouldShowButton, setShouldShowButton] = useState(false);
-
+  const firebaseUser: FirebaseAuthTypes.User = props.navigation.getParam(
+    'user',
+  );
   const buttonHandler = () => {
-    console.log('====process complete');
-    // props.navigation.navigate('OTPScreen');
+    fetch('http://192.168.0.110:3000/sign_up', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: firebaseUser.uid,
+        name: userName,
+        phoneNumber: firebaseUser.phoneNumber,
+        email: '',
+      }),
+    });
+    props.navigation.navigate('HomeScreen');
   };
 
   return (
