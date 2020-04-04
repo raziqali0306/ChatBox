@@ -1,6 +1,15 @@
 import { User } from "./../common/Api";
 import { Thunk, Action } from "easy-peasy";
 
+export interface Message {
+    messageId: string
+    senderId: string,
+    recieverId: string,
+    text: string,
+    timestamp: string,
+    seen: boolean
+}
+
 export interface RootState {
     loginStore: LoginStoreState;
 }
