@@ -1,3 +1,6 @@
+
+import { v4 as uuid } from 'uuid'
+import { Message } from 'src/models';
 export interface User {
   id: string;
   name: string;
@@ -5,6 +8,13 @@ export interface User {
   email: string;
 }
 
+
+interface SendMessageBody {
+	id: string,
+	userId: string,
+	friendId: string,
+	message: string
+}
 class Api {
   baseUrl: string = 'http://192.168.0.110:3000';
 
@@ -51,6 +61,33 @@ class Api {
       }
     } catch (error) {
       return false;
+    }
+  }
+
+
+  async sendMessage(userId: string, toUserId: string, message: string): Promise<Message | null> {
+    try {
+      const messageId = uuid()
+      const body: SendMessageBody = {
+        id: messageId,
+        userId: userId,
+        friendId: toUserId,
+        message: message,
+      }
+      const response = await post(`${this.baseUrl}/send_message`, body);
+      if (response) {
+        return {
+          messageId,
+          senderId: userId,
+          recieverId: toUserId,
+          text: message,
+          timestamp: ''
+        } as Message
+      } else {
+        return null
+      }
+    } catch (error) {
+      return null
     }
   }
 }

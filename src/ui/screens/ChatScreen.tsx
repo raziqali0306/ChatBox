@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
-import {User} from './../../common/Api';
+import api, {User} from './../../common/Api';
 import {useStoreState} from './../../stores';
 import {Message} from 'src/models';
 import {FlatList} from 'react-native-gesture-handler';
-import {createConfigItem} from '@babel/core';
 
 const ChatScreen = (props: any) => {
   const user = useStoreState((state) => state.loginStore.currentLoggedInUser);
-  const [searchText, setSearchText] = useState('');
+  const [messageText, setMessageText] = useState('');
 
   const [messages, setMessages] = useState<Array<Message>>([
     {
@@ -47,7 +46,18 @@ const ChatScreen = (props: any) => {
   ]);
   const contact: User = props.navigation.getParam('contact');
 
-  const pressHandler = () => {};
+  const pressHandler = () => {
+    if (user && contact) {
+      api.sendMessage(user.id, contact.id, messageText).then((res) => {
+        if (res) {
+          setMessages((currentMessages) => [res, ...currentMessages]);
+          setMessageText('');
+        } else {
+          setMessageText('');
+        }
+      });
+    }
+  };
   if (!contact) {
     return null;
   }
@@ -99,11 +109,11 @@ const ChatScreen = (props: any) => {
       <View style={styles.searchView}>
         <TextInput
           multiline
-          value={searchText}
+          value={messageText}
           placeholder={'Type a message..'}
           keyboardType={'default'}
           style={styles.searchBox}
-          onChangeText={(text) => setSearchText(text)}
+          onChangeText={(text) => setMessageText(text)}
         />
         <Button title={'send'} onPress={pressHandler} />
       </View>
