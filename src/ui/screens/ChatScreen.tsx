@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
 import {User} from './../../common/Api';
 import {useStoreState} from './../../stores';
 import {Message} from 'src/models';
+import {FlatList} from 'react-native-gesture-handler';
+import {createConfigItem} from '@babel/core';
 
 const ChatScreen = (props: any) => {
   const user = useStoreState((state) => state.loginStore.currentLoggedInUser);
@@ -13,31 +15,32 @@ const ChatScreen = (props: any) => {
       messageId: 'somemessge-one',
       senderId: 'senderId',
       recieverId: 'recieverId',
-      text: '',
+      text: 'hey! how are you',
       timestamp: '',
       seen: false,
     },
     {
-      messageId: 'somemessge-one',
+      messageId: 'somemessge-two',
       senderId: 'recieverId',
       recieverId: 'senderId',
-      text: '',
+      text: 'message two',
       timestamp: '',
       seen: false,
     },
     {
-      messageId: 'somemessge-one',
+      messageId: 'somemessge-three',
       senderId: 'senderId',
       recieverId: 'recieverId',
-      text: '',
+      text:
+        'ooasdfasdfa adf asd fa sd fa sd fa sdf a sd fa sd f adfafa df asdfadfa ds f fasdf',
       timestamp: '',
       seen: false,
     },
     {
-      messageId: 'somemessge-one',
+      messageId: 'somemessge-four',
       senderId: 'recieverId',
       recieverId: 'senderId',
-      text: '',
+      text: 'asdfasdfa sdf a sd fa sd f as df as d fa sd fa sdf ',
       timestamp: '',
       seen: false,
     },
@@ -53,11 +56,38 @@ const ChatScreen = (props: any) => {
       <View style={styles.item}>
         <View style={styles.profileBox} />
         <View style={styles.userInfo}>
-          <Text style={{fontSize: 14}}>{contact.name}</Text>
+          <Text style={{fontSize: 14}}>{contact.name}}</Text>
           <Text style={{fontSize: 10}}>{contact.phoneNumber}</Text>
         </View>
       </View>
-      <View style={{flex: 1}} />
+      <View style={{flex: 1}}>
+        <FlatList
+          data={messages}
+          renderItem={({item}) => {
+            return (
+              <View
+                style={
+                  'senderId' === item.senderId
+                    ? styles.sendersView
+                    : styles.receiversView
+                }>
+                <Text
+                  style={
+                    'senderId' === item.senderId
+                      ? styles.sendersText
+                      : styles.receiversText
+                  }>
+                  {item.text}
+                </Text>
+              </View>
+            );
+          }}
+          keyExtractor={(item) => {
+            return item.messageId;
+          }}
+          inverted
+        />
+      </View>
       <View style={styles.searchView}>
         <TextInput
           multiline
@@ -114,6 +144,33 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
+  },
+  sendersView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    margin: 5,
+  },
+  receiversView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    margin: 5,
+  },
+  sendersText: {
+    maxWidth: '70%',
+    backgroundColor: '#1E90FF',
+    color: 'white',
+    padding: 6,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    elevation: 2,
+  },
+  receiversText: {
+    maxWidth: '70%',
+    backgroundColor: '#B0C4DE',
+    padding: 6,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    elevation: 2,
   },
 });
 
