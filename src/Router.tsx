@@ -7,15 +7,15 @@ import HomeScreen from './ui/screens/HomeScreen';
 
 const Router = createStackNavigator(
   {
-    PhoneNumberScreen: {
-      screen: PhoneNumberScreen,
-    },
-    OTPScreen: {
-      screen: OTPScreen,
-    },
-    NameInputScreen: {
-      screen: NameInputScreen,
-    },
+    // PhoneNumberScreen: {
+    //   screen: PhoneNumberScreen,
+    // },
+    // OTPScreen: {
+    //   screen: OTPScreen,
+    // },
+    // NameInputScreen: {
+    //   screen: NameInputScreen,
+    // },
     HomeScreen: {
       screen: HomeScreen,
     },
