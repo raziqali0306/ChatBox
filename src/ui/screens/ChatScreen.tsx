@@ -24,7 +24,7 @@ const ChatScreen = (props: any) => {
   };
   useEffect(() => {
     getMessages();
-    setInterval(() => {
+    const timer = setInterval(() => {
       if (user) {
         api.getMessageCountOfChat(user!.id, contact.id).then((count) => {
           if (count > messages.length) {
@@ -33,6 +33,10 @@ const ChatScreen = (props: any) => {
         });
       }
     }, 2000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   const contact: User = props.navigation.getParam('contact');
