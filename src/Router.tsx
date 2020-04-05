@@ -6,6 +6,7 @@ import NameInputScreen from './ui/screens/NameInputScreen';
 import HomeScreen from './ui/screens/HomeScreen';
 import ChatScreen from './ui/screens/ChatScreen';
 import AppInitialLoader from './ui/screens/AppInitialLoader';
+import ContactScreen from './ui/screens/ContactScreen';
 
 const HomeNavigator = createStackNavigator(
   {
@@ -14,6 +15,9 @@ const HomeNavigator = createStackNavigator(
     },
     ChatScreen: {
       screen: ChatScreen,
+    },
+    ContactScreen: {
+      screen: ContactScreen,
     },
   },
   {headerMode: 'none'},
