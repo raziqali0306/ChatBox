@@ -25,11 +25,13 @@ const ChatScreen = (props: any) => {
   useEffect(() => {
     getMessages();
     setInterval(() => {
-      api.getMessageCountOfChat(user!.id, contact.id).then((count) => {
-        if (count > messages.length) {
-          getMessages();
-        }
-      });
+      if (user) {
+        api.getMessageCountOfChat(user!.id, contact.id).then((count) => {
+          if (count > messages.length) {
+            getMessages();
+          }
+        });
+      }
     }, 2000);
   }, []);
 
@@ -66,13 +68,13 @@ const ChatScreen = (props: any) => {
             return (
               <View
                 style={
-                  item.sender_id === user!.id
+                  user && item.sender_id === user.id
                     ? {...styles.messageView, justifyContent: 'flex-end'}
                     : {...styles.messageView, justifyContent: 'flex-start'}
                 }>
                 <Text
                   style={
-                    item.sender_id === user!.id
+                    user && item.sender_id === user.id
                       ? {
                           ...styles.messageStyle,
                           backgroundColor: '#1E90FF',
