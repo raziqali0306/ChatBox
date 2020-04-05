@@ -33,6 +33,7 @@ const PhoneNumberScreen = (props) => {
         </View>
         <View style={styles.input}>
           <TextInput
+            maxLength={10}
             style={styles.textInput}
             value={number}
             keyboardType={'number-pad'}

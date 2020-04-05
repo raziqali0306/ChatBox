@@ -165,7 +165,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            buildConfigField "String", "SERVER_URL", System.getProperty('SERVER_URL', properties.getProperty('SERVER_URL', '"http://192.168.0.110:3000"'))
+            buildConfigField "String", "SERVER_URL", System.getProperty('SERVER_URL', properties.getProperty('SERVER_URL', '"http://192.168.0.110:5000"'))
         }
         release {
             // Caution! In production, you need to generate your own keystore file.

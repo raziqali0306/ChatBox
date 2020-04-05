@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native';
 import {TextInput, FlatList} from 'react-native-gesture-handler';
 import api, {User} from './../../common/Api';
@@ -11,18 +11,32 @@ const HomeScreen = (props) => {
       return;
     }
     const response = await api.searchUsers(searchText);
-
     if (response) {
       setUserList(response);
     }
   };
+
+  const getAllUsers = async () => {
+    const response = await api.getAllUsers();
+    setUserList(response);
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  useEffect(() => {
+    if (searchText === '') {
+      getAllUsers();
+    }
+  }, [searchText]);
 
   return (
     <View style={styles.mainViewStyle}>
       <View style={styles.searchView}>
         <TextInput
           value={searchText}
-          placeholder={'Search..'}
+          placeholder={'Name or number..'}
           keyboardType={'default'}
           style={styles.searchBox}
           onChangeText={(text) => setSearchText(text)}
@@ -77,8 +91,8 @@ const styles = StyleSheet.create({
     borderColor: '#F7F7F7',
     borderWidth: 2,
     borderRadius: 8,
-    textAlign: 'center',
-    fontSize: 20,
+    paddingHorizontal: 10,
+    fontSize: 16,
     marginRight: 10,
   },
   item: {
@@ -93,6 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7F7',
     height: 50,
     width: 50,
+    borderRadius: 25,
     padding: 10,
     marginRight: 10,
   },

@@ -26,7 +26,7 @@ interface SendMessageBody {
   message: string;
 }
 class Api {
-  baseUrl: string = 'http://192.168.0.110:3000';
+  baseUrl: string = 'http://192.168.0.110:5000';
   constructor() {
     appConfigModule.config().then(config => {
       console.log("==== config ", config)
@@ -63,6 +63,15 @@ class Api {
   async searchUsers(text: string): Promise<Array<User>> {
     try {
       const searchResult = await get(`${this.baseUrl}/users/search/${text}`);
+      return searchResult;
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async getAllUsers(): Promise<Array<User>> {
+    try {
+      const searchResult = await get(`${this.baseUrl}/users`);
       return searchResult;
     } catch (error) {
       return [];

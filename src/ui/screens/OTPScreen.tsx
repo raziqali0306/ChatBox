@@ -16,13 +16,14 @@ const OTPScreen = ({navigation}) => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         const userExists = await Api.userExists(user.uid);
+        console.log('userExists');
+        console.log(userExists);
+        console.log('userExists');
         if (userExists) {
           const userInfo = await Api.getUserInfo(user.uid);
           if (userInfo) {
             loginUser(userInfo);
             navigation.navigate('HomeScreen');
-          } else {
-            // todo
           }
         } else {
           navigation.navigate('NameInputScreen', {
