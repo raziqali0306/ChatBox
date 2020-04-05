@@ -1,11 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {TextInput, FlatList} from 'react-native-gesture-handler';
 import api, {User} from './../../common/Api';
 
 const HomeScreen = (props) => {
   const [searchText, setSearchText] = useState('');
   const [usersList, setUserList] = useState<Array<User>>([]);
+  const [loading, SetLoading] = useState(false);
   const pressHandler = async () => {
     if (!searchText) {
       return;
@@ -17,8 +25,10 @@ const HomeScreen = (props) => {
   };
 
   const getAllUsers = async () => {
+    SetLoading(true);
     const response = await api.getAllUsers();
     setUserList(response);
+    SetLoading(false);
   };
 
   useEffect(() => {
@@ -43,31 +53,37 @@ const HomeScreen = (props) => {
         />
         <Button title={'SEARCH'} onPress={pressHandler} />
       </View>
-      <View style={{flex: 1}}>
-        <FlatList
-          data={usersList}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                  props.navigation.navigate('ChatScreen', {
-                    contact: item,
-                  });
-                }}>
-                <View style={styles.profileBox} />
-                <View style={styles.userInfo}>
-                  <Text style={{fontSize: 18}}>{item.name}</Text>
-                  <Text style={{fontSize: 12}}>{item.phoneNumber}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item) => {
-            return item.phoneNumber;
-          }}
-        />
-      </View>
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <View style={{flex: 1}}>
+          <FlatList
+            data={usersList}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  style={styles.item}
+                  onPress={() => {
+                    props.navigation.navigate('ChatScreen', {
+                      contact: item,
+                    });
+                  }}>
+                  <View style={styles.profileBox} />
+                  <View style={styles.userInfo}>
+                    <Text style={{fontSize: 18}}>{item.name}</Text>
+                    <Text style={{fontSize: 12}}>{item.phonenumber}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item) => {
+              return item.phonenumber;
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };

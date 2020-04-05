@@ -16,7 +16,7 @@ const NameInputScreen = (props: any) => {
     const user: User = {
       id: firebaseUser.uid,
       name: userName,
-      phoneNumber: firebaseUser.phoneNumber ? firebaseUser.phoneNumber : '',
+      phoneNumber: firebaseUser.phonenumber ? firebaseUser.phonenumber : '',
       email: '',
     };
     const isUserSignedIn = await api.signUpUser(user);

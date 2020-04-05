@@ -1,15 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 import api, {User} from './../../common/Api';
 import {useStoreState} from './../../stores';
 import {Message} from 'src/models';
 import {FlatList} from 'react-native-gesture-handler';
+import moment from 'moment';
 
 const ChatScreen = (props: any) => {
   const user = useStoreState((state) => state.loginStore.currentLoggedInUser);
   const [messageText, setMessageText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [messages, setMessages] = useState<Array<Message>>([]);
 
@@ -19,10 +28,14 @@ const ChatScreen = (props: any) => {
         user!.id,
         contact.id,
       );
+      console.log(user);
       setMessages(arrayOfMessages);
+
+      setLoading(false);
     }
   };
   useEffect(() => {
+    setLoading(true);
     getMessages();
     const timer = setInterval(() => {
       if (user) {
@@ -62,41 +75,51 @@ const ChatScreen = (props: any) => {
         <View style={styles.profileBox} />
         <View style={styles.userInfo}>
           <Text style={{fontSize: 14}}>{contact.name}</Text>
-          <Text style={{fontSize: 10}}>{contact.phoneNumber}</Text>
+          <Text style={{fontSize: 10}}>{contact.phonenumber}</Text>
         </View>
       </View>
-      <View style={{flex: 1}}>
-        <FlatList
-          data={messages}
-          renderItem={({item}) => {
-            return (
-              <View
-                style={
-                  user && item.sender_id === user.id
-                    ? {...styles.messageView, justifyContent: 'flex-end'}
-                    : {...styles.messageView, justifyContent: 'flex-start'}
-                }>
-                <Text
+      {!loading ? (
+        <View style={{flex: 1}}>
+          <FlatList
+            data={messages}
+            renderItem={({item}) => {
+              return (
+                <View
                   style={
                     user && item.sender_id === user.id
-                      ? {
-                          ...styles.messageStyle,
-                          backgroundColor: '#1E90FF',
-                          color: 'white',
-                        }
-                      : {...styles.messageStyle, backgroundColor: '#B0C4DE'}
+                      ? {...styles.messageView, alignItems: 'flex-end'}
+                      : {...styles.messageView, alignItems: 'flex-start'}
                   }>
-                  {item.text}
-                </Text>
-              </View>
-            );
-          }}
-          keyExtractor={(item) => {
-            return item.message_id;
-          }}
-          inverted
-        />
-      </View>
+                  <Text
+                    style={
+                      user && item.sender_id === user.id
+                        ? {
+                            ...styles.messageStyle,
+                            backgroundColor: '#1E90FF',
+                            color: 'white',
+                          }
+                        : {...styles.messageStyle, backgroundColor: '#B0C4DE'}
+                    }>
+                    {item.text}
+                  </Text>
+                  <Text style={{fontSize: 12, color: '#00000044'}}>
+                    {moment(item.timestamp).hours()}:
+                    {moment(item.timestamp).minutes()}
+                  </Text>
+                </View>
+              );
+            }}
+            keyExtractor={(item) => {
+              return item.message_id;
+            }}
+            inverted
+          />
+        </View>
+      ) : (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
       <View style={styles.searchView}>
         <TextInput
           multiline
@@ -137,11 +160,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   item: {
+    elevation: 3,
+    borderRadius: 8,
+    backgroundColor: 'white',
     height: 56,
     flexDirection: 'row',
     paddingHorizontal: 10,
     alignItems: 'center',
-    elevation: 2,
   },
   profileBox: {
     backgroundColor: '#F7F7F7',
@@ -155,7 +180,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   messageView: {
-    flexDirection: 'row',
     margin: 5,
   },
   messageStyle: {
@@ -164,6 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 10,
     elevation: 2,
+    fontSize: 13,
   },
 });
 

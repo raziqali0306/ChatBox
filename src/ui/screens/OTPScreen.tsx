@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
@@ -11,21 +11,21 @@ const OTPScreen = ({navigation}) => {
   const confirmation: FirebaseAuthTypes.ConfirmationResult = navigation.getParam(
     'confirmation',
   );
+  const [loading, setLoading] = useState(false);
 
   const listenAuthStateChange = () => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         const userExists = await Api.userExists(user.uid);
-        console.log('userExists');
-        console.log(userExists);
-        console.log('userExists');
         if (userExists) {
           const userInfo = await Api.getUserInfo(user.uid);
           if (userInfo) {
             loginUser(userInfo);
+            setLoading(false);
             navigation.navigate('HomeScreen');
           }
         } else {
+          setLoading(false);
           navigation.navigate('NameInputScreen', {
             user: user,
           });
@@ -58,9 +58,15 @@ const OTPScreen = ({navigation}) => {
           style={{width: '100%', height: 100}}
           pinCount={6}
           onCodeFilled={(code) => {
+            setLoading(true);
             login(code);
           }}
         />
+        {loading ? (
+          <View style={{justifyContent: 'center', marginTop: 100}}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -81,7 +87,6 @@ const styles = StyleSheet.create({
   },
   otpArea: {
     flex: 1,
-    flexDirection: 'row',
     marginVertical: 20,
   },
   otpFeildArea: {

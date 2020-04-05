@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, Button, TextInput, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  Button,
+  TextInput,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import auth, {firebase} from '@react-native-firebase/auth';
 
 const PhoneNumberScreen = (props) => {
@@ -14,9 +21,12 @@ const PhoneNumberScreen = (props) => {
   const [number, setNumber] = useState<string>('');
 
   const [shouldShowButton, setShouldShowButton] = useState(false);
-
+  const [showLoading, setShowLoading] = useState(false);
   const buttonHandler = async () => {
+    setShouldShowButton(false);
+    setShowLoading(true);
     const confirmation = await auth().signInWithPhoneNumber(`+91 ${number}`);
+    setShowLoading(false);
     props.navigation.navigate('OTPScreen', {
       phoneNumber: number,
       confirmation: confirmation,
@@ -54,6 +64,10 @@ const PhoneNumberScreen = (props) => {
       {shouldShowButton ? (
         <View style={styles.buttonView}>
           <Button title={'NEXT'} onPress={buttonHandler} />
+        </View>
+      ) : showLoading ? (
+        <View style={{justifyContent: 'center', marginBottom: 20}}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : null}
     </View>
@@ -94,7 +108,6 @@ const styles = StyleSheet.create({
   buttonView: {
     paddingLeft: 20,
     paddingRight: 20,
-    width: '100%',
     margin: 10,
     marginVertical: 20,
   },

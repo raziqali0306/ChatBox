@@ -1,21 +1,20 @@
 import {v4 as uuid} from 'uuid';
 import {Message} from 'src/models';
-import { NativeModules } from 'react-native';
-
+import {NativeModules} from 'react-native';
 
 interface AppConfig {
-  serverUrl: string
+  serverUrl: string;
 }
 
 interface AppConfigModule {
-  config: () => Promise<AppConfig | null | undefined>
+  config: () => Promise<AppConfig | null | undefined>;
 }
 
 const appConfigModule: AppConfigModule = NativeModules.AppConfigModule;
 export interface User {
   id: string;
   name: string;
-  phoneNumber: string;
+  phonenumber: string;
   email: string;
 }
 
@@ -28,12 +27,12 @@ interface SendMessageBody {
 class Api {
   baseUrl: string = 'http://192.168.0.110:5000';
   constructor() {
-    appConfigModule.config().then(config => {
-      console.log("==== config ", config)
+    appConfigModule.config().then((config) => {
+      console.log('==== config ', config);
       if (config) {
-        this.baseUrl = config.serverUrl
+        this.baseUrl = config.serverUrl;
       }
-    })
+    });
   }
 
   async getUserInfo(userId: string): Promise<User | null> {
