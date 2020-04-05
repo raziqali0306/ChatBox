@@ -2,9 +2,9 @@ import { User } from "./../common/Api";
 import { Thunk, Action } from "easy-peasy";
 
 export interface Message {
-    messageId: string
-    senderId: string,
-    recieverId: string,
+    message_id: string
+    sender_id: string,
+    reciever_id: string,
     text: string,
     timestamp: string,
     seen: boolean

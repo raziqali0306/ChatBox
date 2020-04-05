@@ -16,7 +16,7 @@ const ChatScreen = (props: any) => {
   const getMessages = async () => {
     if (user) {
       const arrayOfMessages = await api.getAllMessagesOfChat(
-        user?.id,
+        user!.id,
         contact.id,
       );
       setMessages(arrayOfMessages);
@@ -66,13 +66,13 @@ const ChatScreen = (props: any) => {
             return (
               <View
                 style={
-                  item.senderId === user?.id
+                  item.sender_id === user!.id
                     ? {...styles.messageView, justifyContent: 'flex-end'}
                     : {...styles.messageView, justifyContent: 'flex-start'}
                 }>
                 <Text
                   style={
-                    item.senderId === user?.id
+                    item.sender_id === user!.id
                       ? {
                           ...styles.messageStyle,
                           backgroundColor: '#1E90FF',
@@ -86,7 +86,7 @@ const ChatScreen = (props: any) => {
             );
           }}
           keyExtractor={(item) => {
-            return item.messageId;
+            return item.message_id;
           }}
           inverted
         />

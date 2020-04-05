@@ -98,9 +98,9 @@ class Api {
       const response = await post(`${this.baseUrl}/send_message`, body);
       if (response) {
         return {
-          messageId,
-          senderId: userId,
-          recieverId: toUserId,
+          message_id: messageId,
+          sender_id: userId,
+          reciever_id: toUserId,
           text: message,
           timestamp: '',
         } as Message;
