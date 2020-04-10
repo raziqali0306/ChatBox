@@ -40,15 +40,18 @@ const LoginFlow = createStackNavigator(
 
 const Router = createSwitchNavigator(
   {
-    AppInitialLoader: {
-      screen: AppInitialLoader,
+    ContactScreen: {
+      screen: ContactScreen,
     },
-    Login: LoginFlow,
-    Home: HomeNavigator,
+    //   AppInitialLoader: {
+    //     screen: AppInitialLoader,
+    //   },
+    //   Login: LoginFlow,
+    //   Home: HomeNavigator,
   },
-  {
-    initialRouteName: 'AppInitialLoader',
-  },
+  // {
+  //   initialRouteName: 'AppInitialLoader',
+  // },
 );
 
 export default createAppContainer(Router);

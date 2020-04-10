@@ -6,8 +6,9 @@ import {
   Button,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
-import {TextInput, FlatList} from 'react-native-gesture-handler';
+import {TextInput} from 'react-native-gesture-handler';
 import api, {User} from './../../common/Api';
 import contacts from './../../common/Contacts';
 
@@ -48,9 +49,10 @@ const ContactScreen = (props) => {
     });
     return users;
   };
-
+  const [pageNumber, setPageNumber] = useState(0);
   const getAllUsers = async () => {
-    const response = await contacts.getContacts(0);
+    setPageNumber((x) => (x += 1));
+    const response = await contacts.getContacts(pageNumber);
     console.log('false');
     const filteredContactList = contactsToUsersConverter(response).filter(
       (item, index, self) =>
@@ -60,7 +62,7 @@ const ContactScreen = (props) => {
         ),
     );
 
-    setUserList(filteredContactList);
+    setUserList([...usersList, filteredContactList]);
     SetLoading(false);
   };
 
@@ -110,6 +112,9 @@ const ContactScreen = (props) => {
             }}
             keyExtractor={(item) => {
               return item.phonenumber;
+            }}
+            onEndReached={() => {
+              getAllUsers();
             }}
           />
         </View>
